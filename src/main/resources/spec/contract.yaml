@@ -1,0 +1,137 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/JOSEPANTA63/augment-reality-service/1.0.0
+info:
+  description: API to control AR Images from Cloud
+  version: "1.0.0"
+  title: augment-reality-service
+  contact:
+    email: josepanta63@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: users
+    description: available to all users
+paths:
+  /ar-images/s3:
+    post:
+      tags:
+        - users
+      summary: upload an ar-image
+      operationId: uploadFile
+      description: upload an ar-image
+      responses:
+        '201':
+          description: item upload
+        '400':
+          description: invalid input
+        '409':
+          description: invalid input
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Files'
+        description: ar-image to upload
+  /ar-images:
+    get:
+      tags:
+        - users
+      summary: return all ar-images
+      operationId: getAll
+      description: |
+        return all ar-images
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArImages'
+        '400':
+          description: unsuccessful operation
+    post:
+      tags:
+        - users
+      summary: adds an ar-image
+      operationId: save
+      description: adds an ar-image
+      responses:
+        '201':
+          description: item created
+        '400':
+          description: invalid input
+        '409':
+          description: invalid input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArImages'
+        description: ar-image to add
+  /ar-images/{id}:
+    get:
+      tags:
+        - users
+      summary: return ar-image by id
+      operationId: getById
+      parameters:
+        - name: id
+          in: path
+          description: ar-image id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      description: |
+        return ar-image by id
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArImages'
+        '400':
+          description: unsuccessful operation
+components:
+  schemas:
+    Files:
+      type: object
+      properties:
+        fileName:
+          type: string
+          format: binary
+          example: attachment.txt
+    ArImages:
+      type: object
+      required:
+        - id
+        - name
+        - uri
+        - description
+        - state
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: house
+        uri:
+          type: string
+          example: http(s)://s3.amazonaws.com/<bucket>/<object>
+        description:
+          type: string
+          example: big house with three rooms
+        state:
+          type: string
+          example: A
